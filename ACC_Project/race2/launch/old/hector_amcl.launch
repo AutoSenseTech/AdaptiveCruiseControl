@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <!-- TF Frames -->
+    <arg name="map_frame" default="map"/>
+    <arg name="odom_frame" default="odom"/>
+    <arg name="lidar_frame" default="laser"/>
+    <arg name="base_frame" default="base_link"/>
+
+    <!-- LiDAR parameters -->
+    <arg name="lidar_ip" default="192.168.1.11"/>
+    <arg name="publish_intensity" default="false"/>
+
+    <!-- hector_mapping parameters -->
+    <arg name="map_resolution" default="0.025"/> <!--length of a grid cell edge-->
+    <arg name="map_size" default="1024"/>
+    <arg name="map_start_x" default="0.5"/>
+    <arg name="map_start_y" default="0.5"/>
+    <arg name="map_update_distance_thresh" default="0.4"/> <!--distance car must travel before mapping update -->
+    <arg name="map_update_angle_thresh" default="0.9"/>
+    <arg name="laser_min_dist" default="0.4"/>
+    <arg name="laser_max_dist" default="10.0"/>
+    <arg name="pub_map_odom_transform" default="false"/>
+    <arg name="output_timing" default="false"/>
+    <arg name="pub_map_scanmatch_transform" default="false"/>
+    <arg name="tf_map_scanmatch_transform_frame_name" default="scanmatcher_frame"/>
+    <arg name="pub_odometry" default="true"/>
+
+    <!-- AMCL parameters -->
+    <arg name="min_particles" default="100"/>
+    <arg name="max_particles" default="5000"/>
+    <arg name="initial_pose_x" default="0.0"/>
+    <arg name="initial_pose_y" default="0.0"/>
+    <arg name="initial_pose_a" default="0.0"/>
+    <arg name="initial_cov_xx" default="0.25"/>
+    <arg name="initial_cov_yy" default="0.25"/>
+    <arg name="use_map_topic" default="false"/>
+    <arg name="first_map_only" default="false"/>
+    <arg name="laser_min_range" default="0.4"/>
+    <arg name="laser_max_range" default="10.0"/>
+    <arg name="odom_frame_id" default="odom"/>
+    <arg name="base_frame_id" default="base_link"/>
+    <arg name="global_frame_id" default="map"/>
+
+
+<!-- odom scanmatcher transform -->
+  <node pkg="odom_pub" type="odom_pub" name="odom_pub" output="screen"/>
+<!-- Static transform publishers -->
+  <node pkg="tf" type="static_transform_publisher" name="laser_to_base" args="0.2 0 -0.03 0 0 0 1 laser base_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="scanmatcher_to_laser" args="0 0 0 0 0 0 1 scanmatcher_frame laser 100" />
+  
+  
+
+<!-- LiDAR launch info -->
+  <node pkg="urg_node" type="urg_node" name="urg_node" output="screen">
+    <param name="ip_address" value="$(arg lidar_ip)"/>
+    <param name="frame_id" value="$(arg lidar_frame)"/>
+    <param name="publish_intensity" value="$(arg publish_intensity)"/>
+  </node>
+
+<!-- hector_mapping launch info -->
+  <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
+    <remap from="map" to="mapcurrent"/>
+    <!-- <remap from="poseupdate" to="initialpose"/> -->
+    <param name="base_frame" value="$(arg base_frame)"/>
+    <param name="map_frame" value="mapcurrent"/>
+    <param name="odom_frame" value="$(arg odom_frame)"/>
+    <param name="map_resolution" value="$(arg map_resolution)"/>
+    <param name="map_size" value="$(arg map_size)"/>
+    <param name="map_start_x" value="$(arg map_start_x)"/>
+    <param name="map_start_y" value="$(arg map_start_y)"/>
+    <param name="map_update_distance_thresh" value="$(arg map_update_distance_thresh)"/>
+    <param name="map_update_angle_thresh" value="$(arg map_update_angle_thresh)"/>
+    <param name="laser_min_dist" value="$(arg laser_min_dist)"/>
+    <param name="laser_max_dist" value="$(arg laser_max_dist)"/>
+    <param name="pub_map_odom_transform" value="$(arg pub_map_odom_transform)"/>
+    <param name="output_timing" value="$(arg output_timing)"/>
+    <param name="pub_map_scanmatch_transform" value="$(arg pub_map_scanmatch_transform)"/>
+    <param name="tf_map_scanmatch_transform_frame_name" value="$(arg tf_map_scanmatch_transform_frame_name)"/>  
+    <param name="pub_odometry" value="$(arg pub_odometry)"/>
+  </node>
+
+  <!-- AMCL launch info -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <param name="min_particles" value="$(arg min_particles)"/>
+    <param name="max_particles" value="$(arg max_particles)"/>
+    <param name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <param name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <param name="initial_pose_a" value="$(arg initial_pose_a)"/>
+    <param name="initial_cov_xx" value="$(arg initial_cov_xx)"/>
+    <param name="initial_cov_yy" value="$(arg initial_cov_yy)"/>
+    <param name="use_map_topic" value="$(arg use_map_topic)"/>
+    <param name="first_map_only" value="$(arg first_map_only)"/>
+    <param name="laser_min_range" value="$(arg laser_min_range)"/>
+    <param name="laser_max_range" value="$(arg laser_max_range)"/>
+    <param name="odom_frame_id" value="$(arg odom_frame_id)"/>
+    <param name="base_frame_id" value="$(arg base_frame_id)"/>
+    <param name="global_frame_id" value="$(arg global_frame_id)"/>
+  </node>
+
+</launch>

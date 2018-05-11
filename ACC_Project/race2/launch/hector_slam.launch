@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- laser to base_link transform -->
+  <node pkg="tf" type="static_transform_publisher" name="laser_to_base"
+        args="0.3302 0 0 0 0 0 1 laser base_link 100"/>
+
+  <!-- Launches LIDAR node -->
+  <include file="$(find race2)/launch/nodes/lidar_config.launch"/>
+
+  <!-- Launches hector_mapping node -->
+  <include file="$(find race2)/launch/nodes/hm_mapping_config.launch"/>
+
+</launch>

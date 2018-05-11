@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches IMU -->
+  <include file="$(find race2)/launch/nodes/imu_config.launch"/>
+
+  <!-- Launches LIDAR -->
+  <include file="$(find race2)/launch/nodes/lidar_config.launch"/>
+
+  <!-- Launches laser_scan_matcher node -->
+  <include file="$(find race2)/launch/nodes/laser_scan_matcher_config.launch"/>
+
+  <!-- Launches pose2d_to_pose -->
+  <!-- <include file="$(find pose_conv)/launch/pose2d_to_pose_config.launch"/> -->
+
+  <!-- Provides base_link->laser transform -->
+  <node pkg="tf" type="static_transform_publisher" name="base_to_laser"
+        args="-0.3302 0 0 0 0 0 1 base_link laser 100" />
+
+</launch>

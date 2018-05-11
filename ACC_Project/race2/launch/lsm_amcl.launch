@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches the map_server node. Make sure to edit the file at
+       $(find map_server)/launch to have the correct map file! -->
+  <include file="$(find race2)/launch/nodes/map_server_config.launch"/>
+
+  <!-- Launches laser_scan_matcher_odom -->
+  <include file="$(find race2)/launch/lsm_odom.launch"/>
+
+  <!-- Launches amcl -->
+  <include file="$(find race2)/launch/nodes/amcl_config.launch"/>
+
+</launch>

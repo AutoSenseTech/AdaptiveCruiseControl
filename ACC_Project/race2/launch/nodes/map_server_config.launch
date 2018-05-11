@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Map file destination. -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/smalllab.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/upstairs_hallway_w_obstacles_halfway.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/lsm_testmap_1.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/testmap_4.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/upstairs_hallway_final_half.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/yaw_test.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/turn_test.yaml"/> -->
+  <!-- <arg name="map_file" default="$(find race2)/maps/fgh_rasl_2.yaml"/> -->
+  <arg name="map_file" default="$(find race2)/maps/two_turns.yaml"/>
+
+  <!-- Run the map_server node. -->
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"/>
+
+</launch>
+
+  

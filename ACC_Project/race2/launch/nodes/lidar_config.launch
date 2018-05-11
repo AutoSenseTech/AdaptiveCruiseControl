@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- LIDAR node -->
+
+  <node pkg="urg_node" type="urg_node" name="urg_node" output="screen">
+
+    <!-- IP address for the LIDAR -->
+    <param name="ip_address" value="192.168.1.11"/>
+
+    <!-- TF frame ID for the LIDAR scans -->
+    <param name="frame_id" value="laser"/>
+
+    <!-- Whether or not to publish intensity. Setting to false saves
+         bandwidth. -->
+    <param name="publish_intensity" value="true"/>
+
+  </node>
+
+</launch>

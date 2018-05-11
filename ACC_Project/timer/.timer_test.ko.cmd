@@ -1,0 +1,1 @@
+cmd_/home/ubuntu/demo/timer2/timer_test.ko := ld -EL -r  -T /usr/src/linux-headers-3.10.40-ga7da876/scripts/module-common.lds --build-id  -o /home/ubuntu/demo/timer2/timer_test.ko /home/ubuntu/demo/timer2/timer_test.o /home/ubuntu/demo/timer2/timer_test.mod.o

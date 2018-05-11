@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches control node -->
+  <node pkg="race2" type="control.py" name="control" output="screen"
+  launch-prefix="xterm -e">
+
+    <!-- Proportional control constant -->
+    <param name="kp" value="14.0"/>
+    
+    <!-- Derivative control constant -->
+    <param name="kd" value="0.09"/>
+
+    <!-- Error scale constant -->
+    <param name="scale" value="2.5"/>
+
+  </node>
+
+</launch>
+
+

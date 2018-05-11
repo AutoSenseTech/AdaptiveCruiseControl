@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches amcl w/ odom. -->
+  <include file="$(find race2)/launch/lsm_amcl.launch"/>
+
+  <!-- Launches control node. Currently configured to stop after 10.0 m. -->
+  <include file="$(find race2)/launch/driving_straight_w_pose.launch"/>
+
+</launch>

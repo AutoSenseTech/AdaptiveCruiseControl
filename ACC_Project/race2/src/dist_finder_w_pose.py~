@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import rospy
+import sys
+import math
+from sensor_msgs.msg import LaserScan
+from race2.msg import pid_input
+from std_msgs.msg import Int16
+
+desired_trajectory = 1 #in meters?
+#vel_input = 30 #find out units
+theta_input = 0
+
+pub = rospy.Publisher('error', pid_input, queue_size=10)
+
+##	Input: 	data: Lidar scan data (ranges in meter)
+##		theta: The angle (in radians) at which the distance is requried
+##	OUTPUT: distance of scan at angle theta
+def getRange(data,theta):
+# Find the index of the arary that corresponds to angle theta.
+# Return the lidar scan value at that index
+# Do some error checking for NaN and ubsurd values
+## Your code goes here
+	
+	#is theta NaN?
+	x = float(theta)
+	if math.isnan(x):
+		print('theta is not a number: %s', theta)
+		raise TypeError('The given value %s is not a number', theta)
+	
+	#is theta ubsurd?
+	if theta < data.angle_min or theta > data.angle_max:
+		print 'Given theta is not within angle range\ntheta=%d\nmin=%4.2f\nmax=%4.2f' %(theta, data.angle_min, data.angle_max)
+		raise ValueError('Theta is not within range')
+
+	##theta is a number; find index for given theta
+	step = 0
+	
+	##angle_min = -2.36
+	angle_total = data.angle_min
+	while angle_total < theta:
+		step = step + 1
+		angle_total = angle_total + data.angle_increment
+	
+	##found index corresponding to theta
+	return data.ranges[step]
+
+
+def callback(data):
+	global theta_input
+	global desired_trajectory
+	global vel_input
+	desired_trajectory = rospy.get_param("trajectory", 1.0)
+	print '%.2f %.2f' % (theta_input, vel_input)
+	theta_offset = math.radians(-90) #offset to 0
+	swing = math.radians(theta_input) + theta_offset #theta to radians
+	a = getRange(data, swing)
+	b = getRange(data, theta_offset)
+	print 'a: %4.5f\nb: %4.5f' % (a, b)
+	
+	
+	## Your code goes here (actually it's this entire method)
+	top = (a * math.cos(swing)) - b
+	bot = a * math.sin(swing)
+	alpha = math.fabs(math.atan(float(top)/bot))
+	
+	##update theta?
+	#theta_input = math.degrees(alpha)
+
+	ab = b * math.cos(alpha)
+	ac = vel_input*data.time_increment
+	cd = ab + ac*math.sin(alpha)
+	print 'alpha: %4.5f\nab: %4.5f\nac: %4.5f\ncd: %4.5f\n' % (alpha,ab,ac,cd)
+	error = desired_trajectory - cd
+	#error = math.fabs(desired_trajectory - cd)
+	## END
+
+	msg = pid_input()
+	msg.pid_error = error
+	msg.pid_vel = vel_input #speed constant for now
+	pub.publish(msg) #goes to control.py
+	
+def flagCallback(flag_msg):
+	global vel_input
+        if flag_msg.data == 1:
+		vel_input = 0.0
+	else:
+		vel_input = 9.0
+	
+	
+
+if __name__ == '__main__':
+	print("Laser node started")
+	vel_input = rospy.get_param("velocity", 9.0)
+	theta_input =  rospy.get_param("theta", 30.0)
+	rospy.init_node('dist_finder',anonymous = True)
+	rospy.Subscriber("pose_flag", Int16, flagCallback)
+	rospy.Subscriber("scan", LaserScan, callback)
+	rospy.spin()

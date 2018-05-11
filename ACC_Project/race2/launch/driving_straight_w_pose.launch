@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<launch>
+
+
+
+  <!-- LIDAR node -->
+  <!-- <node pkg="urg_node" type="urg_node" name="urg_node" output="screen"> -->
+
+    <!-- IP Address -->
+    <!-- <param name="ip_address" value="192.168.1.11"/> -->
+
+    <!-- TF frame id of the scans -->
+    <!-- <param name="frame_id" value="laser"/> -->
+
+    <!-- Whether or not to publish intensities. True = yes; false = no. -->
+    <!-- <param name="publish_intensity" value="true"/> -->
+
+  <!-- </node> -->
+
+
+
+  <!-- ROS serial node -->
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+
+    <!-- Name of port to use (Teensy)-->
+    <param name="port" value="/dev/ttyACM0"/>
+
+    <!-- Baud rate, in bps -->
+    <param name="baud" value="57600"/>
+
+  </node>
+
+
+  <!-- pose_flag node -->
+  <node pkg="pose_conv" type="pose_flag" name="pose_flag" output="screen"/>
+
+
+  <!-- Kill node -->
+  <node pkg="race2" type="kill.py" name="kill" output="screen"
+   launch-prefix="xterm -e"/>
+
+
+
+  <!-- Talker node -->
+  <node pkg="race2" type="talker.py" name="talker" output="screen" 
+   launch-prefix="xterm -e"/>
+
+
+
+  <!-- Control node -->
+  <include file="$(find race2)/launch/nodes/control_config.launch"/>
+
+
+
+  <!-- Distance finder node -->
+  <include file="$(find race2)/launch/nodes/dist_finder_config.launch"/>
+
+
+
+</launch>

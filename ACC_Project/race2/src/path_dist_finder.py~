@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+
+import rospy
+import sys
+import math
+from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import Point
+from sensor_msgs.msg import Imu
+from race2.msg import pid_input
+
+vel_input = rospy.get_param("velocity", 9.0)
+
+x0 = 0
+y0 = 0
+x1 = 2.5
+y1 = -0.8
+xc = 0
+yc = 0
+
+yaw = 0
+
+pub = rospy.Publisher('error', pid_input, queue_size = 10)
+	
+def poseCallback(cur_pose):
+	global vel_input
+	global x0
+	global y0
+	global x1
+	global y1
+	global xc
+	global yc
+	global yaw
+	global pub
+	
+	#Create a line connecting (x0, y0) and (x1, y1)
+	#The line is in standard form (ax + by + c = 0)
+
+	#Slope of line
+	m = (y1 - y0)/ (x1 - x0)
+
+	#Standard form coefficients
+	a = y0 - y1
+	b = x1 - x0
+	c = (x0 * y1) - (x1 * y0)
+
+	#Get current position and yaw of car
+	xc = cur_pose.pose.pose.position.x
+	yc = cur_pose.pose.pose.position.y
+	yaw = cur_pose.pose.pose.orientation.z
+
+	#Calculate perpendicular distance from car to line
+	ac = ((a * xc) + (b * yc) + c) / (math.sqrt((a**a + b**b)))
+
+	#Calculate vertical distance from car to line
+	ab = yc - (m * (xc - x1) + y1)
+
+	#Calculate angle between vertical line from car to line and the line
+	if m == 0:
+		swing = 0
+	elif x1 - x0 == 0:
+		swing = math.radians(90)
+	else:
+		swing = math.asin(ac / ab)
+
+	#Calculate angle correction using IMU angle and swing
+	if ac >= 0: #car is "on top" of the line
+		alpha = swing - yaw
+	else: #car is "below" the line
+		alpha = yaw - swing
+
+
+	#Propagate the car into the future by 1 meter
+	ad = 1.0
+	error = ac + ad * math.sin(alpha)
+
+	##print("a = " + str(a))
+	##print("b = " + str(b))
+	##print("c = " + str(c))
+	##print("m = " + str(m))
+	##print("ac = " + str(ac))
+	##print("ab = " + str(ab))
+	##print("swing = " + str(swing))
+	##print("alpha = " + str(alpha))
+	##print("error = " + str(error) + "\n")
+
+	print 'alpha: %4.5f\nab: %4.5f\nac: %4.5f\nerror: %4.5f\n' % (alpha,ab,ac,error)
+	#Create, pack, and send message to control node
+	msg = pid_input()
+	msg.pid_error = error
+	msg.pid_vel = vel_input
+	pub.publish(msg)
+
+	
+
+	
+if __name__ == '__main__':
+	print("Calculating distance from path...")
+	rospy.init_node("path_dist_finder", anonymous = True)
+	rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, poseCallback)
+	rospy.spin()

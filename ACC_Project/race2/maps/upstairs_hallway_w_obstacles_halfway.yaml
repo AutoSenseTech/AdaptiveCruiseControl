@@ -1,0 +1,7 @@
+image: upstairs_hallway_w_obstacles_halfway.pgm
+resolution: 0.030000
+origin: [-110.606987, -12.302999, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

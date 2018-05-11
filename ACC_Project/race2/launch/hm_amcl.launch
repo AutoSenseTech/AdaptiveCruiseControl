@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- scanmatcher_frame to base_link transform -->
+  <node pkg="tf" type="static_transform_publisher" 
+        name="scanmatcher_to_baselink" 
+        args="0.3302 0 0 0 0 0 1 scanmatcher_frame base_link 100" />
+
+  <!-- base_link to laser transform -->
+  <node pkg="tf" type="static_transform_publisher"
+        name="baselink_to_laser"
+        args="-0.3302 0 0 0 0 0 1 base_link laser 100" />
+  
+  <!-- Launches odom_pub node -->
+  <node pkg="odom_pub" type="odom_pub" name="odom_pub" output="screen"/>
+
+  <!-- Launches map_server node -->
+  <include file="$(find race2)/launch/nodes/map_server_config.launch"/>
+
+  <!-- Launches LIDAR node -->
+  <include file="$(find race2)/launch/nodes/lidar_config.launch"/>
+
+  <!-- Launches hector_mapping node -->
+  <include file="$(find race2)/launch/nodes/hm_odom_config.launch"/>
+
+  <!-- Launches amcl node -->
+  <include file="$(find race2)/launch/nodes/amcl_config.launch"/>
+
+</launch>

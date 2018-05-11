@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches dist_finder_w_pose node -->
+  <node pkg="race2" type="dist_finder_w_pose.py" name="dist_finder_w_pose"
+      output="screen">
+    
+    <!-- Starting velocity of the car. -->
+    <param name="velocity" value="9.0"/>
+
+    <!-- Angle between LIDAR scan data points (degrees). -->
+    <param name="theta" value="30.0"/>
+
+    <!-- Desired distance from the right wall. -->
+    <param name="trajectory" value="1.0"/>
+
+  </node>
+
+</launch>

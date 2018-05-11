@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- hector_mapping node -->
+  <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping"
+        output="screen">
+    <!-- remap the "map" topic so there is no conflict -->
+    <remap from="map" to="mapcurrent"/>
+
+    <!-- The name of the base frame of the robot. -->
+    <param name="base_frame" value="base_link"/>
+
+    <!-- The name of the map frame. -->
+    <param name="map_frame" value="mapcurrent"/>
+
+    <!-- The name of the odom frame. -->
+    <param name="odom_frame" value="odom"/>
+
+    <!-- The map resolution (m). This is the length of a grid cell edge. -->
+    <param name="map_resolution" value="0.030"/>
+
+    <!-- The size (number of cells per axis) of the map. The map is square. -->
+    <param name="map_size" value="4096"/>
+
+    <!-- Location of the origin (0.0, 1.0) of the /map frame on the x axis.
+         The middle is 0.5. -->
+    <param name="map_start_x" value="0.5"/>
+
+    <!-- Location of the origin (0.0, 1.0) of the /map frame on the y axis.
+         The middle is 0.5. -->
+    <param name="map_start_y" value="0.5"/>
+
+    <!-- Threshold distance traveled for map updates (m). -->
+    <param name="map_update_distance_thresh" value="0.4"/>
+
+    <!-- Threshold angle rotation for map updates (radians). -->
+    <param name="map_update_angle_thresh" value="0.9"/>
+
+    <!-- The minimum distance (m) for laser scan endpoints to be used. -->
+    <param name="laser_min_dist" value="0.4"/>
+
+    <!-- The maximum distance (m) for laser scan endpoints to be used. -->
+    <param name="laser_max_dist" value="10.0"/>
+
+    <!-- Determines if the map->odom transform should be published. -->
+    <param name="pub_map_odom_transform" value="false"/>
+
+    <!-- Determines if the scanmatcher->map transform is published. -->
+    <param name="pub_map_scanmatch_transform" value="false"/>
+
+    <!-- The frame name when publishing the scanmatcher to map transform. -->
+    <param name="tf_map_scanmatch_transform_frame_name" 
+           value="scanmatcher_frame"/>
+
+    <!-- Determines if odometry is published. -->
+    <param name="pub_odometry" value="true"/>
+
+  </node>
+
+</launch>

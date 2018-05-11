@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launches Adaptive Monte Carlo Localization Node (amcl) -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+
+    <!-- Minimum allowed number of particles. -->
+    <param name="min_particles" value="100"/>
+
+    <!-- Maximum allowed number of particles. -->
+    <param name="max_particles" value="5000"/>
+
+    <!-- Translational movement required before performing a filter update. -->
+    <param name="update_min_d" value="0.1"/>
+
+    <!-- Rotational movement required before performing a fitler update. -->
+    <param name="update_min_a" value="0.1"/>
+
+    <!-- Initial pose mean (x), used to initialize filter with 
+         Gaussian distribution. -->
+    <param name="initial_pose_x" value="0.0"/>
+
+    <!-- Initial pose mean (y), used to initialize filter with
+         Gaussian distribution. -->
+    <param name="initial_pose_y" value="0.0"/>
+
+    <!-- Initial pose mean (yaw), used to initialize filter with
+         Gaussian distribution. -->
+    <param name="initial_pose_a" value="0.0"/>
+
+    <!-- Initial pose covariance (x*x), used to initialize filter with
+         Gaussian distribution. -->
+    <param name="initial_cov_xx" value="0.25"/>
+
+    <!-- Initial pose covariance (y*y), used to initialize filter with
+         Gaussian distribution. -->
+    <param name="initial_cov_yy" value="0.25"/>
+
+    <!-- Maximum rate (Hz) at which to store the last estimated pose. -->
+    <param name="save_pose_rate" value="-1.0"/>
+
+    <!-- When set to true, amcl will subscribe to the map topic rather than
+     	 making a service call to receive its map. -->
+    <param name="use_map_topic" value="false"/>
+
+    <!-- When set to true, AMCL will only use the first map it subscribes to,
+   	 rather than updating each time a new one is received. -->
+    <param name="first_map_only" value="false"/>
+
+    <!-- Minimum scan range to be considered; -1.0 will cause the laser's
+   	 reported minimum range to be used. -->
+    <param name="laser_min_range" value="0.1"/>
+
+    <!-- Maximum scan range to be considered; -1.0 will cause the laser's
+	 reported maximum range to be used. -->
+    <param name="laser_max_range" value="11.0"/>
+
+    <!-- Which frame to use for odometry. -->
+    <param name="odom_frame_id" value="odom"/>
+
+    <!-- Which frame to use for the robot base. -->
+    <param name="base_frame_id" value="base_link"/>
+
+    <!-- The name of the coordinaet frame published by the 
+	 localization system. -->
+    <param name="global_frame_id" value="map"/>
+
+  </node>
+
+</launch>
