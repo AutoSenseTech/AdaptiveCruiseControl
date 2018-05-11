@@ -15,12 +15,13 @@ int main(int argc, char **argv){
     ros::Publisher rpm_pub = n.advertise<rpm::datarpm>("RPM_TPOIC", 1000);
     ros::Rate loop_rate(10);
     cout << "Begin to read the velocity..." << endl;
+    int fd = open("/dev/RPM", O_RDWR);
     while((ros::ok())){
         int receive;
         std_msgs::String msg;
         rpm::datarpm msg2;
         stringstream stream;
-        int ret, fd;
+        int ret;
         fd = open("/dev/RPM", O_RDWR);
         if(fd<0){
             perror("Failed to open the device...");
@@ -42,6 +43,7 @@ int main(int argc, char **argv){
         loop_rate.sleep();
 
     }
+    close(fd);
     return 0;
 }
 
