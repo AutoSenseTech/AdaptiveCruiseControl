@@ -13,7 +13,7 @@
 
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Feiyang Cai");
+MODULE_AUTHOR("Weihan Wang");
 MODULE_VERSION("0.1");
 
 static unsigned int gpioButton = 161;
